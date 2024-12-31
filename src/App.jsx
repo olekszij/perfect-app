@@ -12,7 +12,8 @@ import Footer from './components/Footer/Footer';
 import Fleet from './pages/Fleet';
 import SpecialOffers from './pages/SpecialOffers';
 
-import FAQ from './pages/Faq'; 
+import FAQ from './pages/FAQ';
+
 
 
 import Contact from './pages/Contact';
