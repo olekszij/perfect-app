@@ -12,7 +12,7 @@ import Footer from './components/Footer/Footer';
 import Fleet from './pages/Fleet';
 import SpecialOffers from './pages/SpecialOffers';
 
-import FAQ from './pages/FAQ';
+// import FAQ from './pages/FAQ';
 
 
 
@@ -55,7 +55,7 @@ function App() {
             {/* Другие страницы */}
             <Route path="/fleet" element={<Fleet />} />
             <Route path="/special-offers" element={<SpecialOffers />} />
-            <Route path="/faq" element={<FAQ />} />
+            {/* <Route path="/faq" element={<FAQ />} /> */}
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>

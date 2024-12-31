@@ -20,7 +20,7 @@ const MenuItems = ({ onClick }) => {
     { label: "Personalized Experiences", href: "activities", page: "/activities" },
     { label: "Fleet", href: "fleet", page: "/fleet" },
     { label: "Special Offers", href: "special-offers", page: "/special-offers" },
-    { label: "FAQ", href: "faq", page: "/faq" },
+    // { label: "FAQ", href: "faq", page: "/faq" },
     { label: "Contact", href: "contact", page: "/contact" },
   ];
 
