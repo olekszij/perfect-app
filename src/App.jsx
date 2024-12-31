@@ -11,7 +11,10 @@ import Footer from './components/Footer/Footer';
 // Импортируем новые страницы
 import Fleet from './pages/Fleet';
 import SpecialOffers from './pages/SpecialOffers';
-import FAQ from './pages/Faq';
+
+import FAQ from './pages/Faq'; 
+
+
 import Contact from './pages/Contact';
 
 // Импортируем страницы услуг
