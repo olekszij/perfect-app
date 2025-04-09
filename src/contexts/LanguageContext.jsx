@@ -134,7 +134,7 @@ const translations = {
     fashionWeek: 'Chauffeur Fashion Week',
     bookRide: 'Réserver',
     seConnecter: 'Se connecter',
-    connectToAccount: 'Connectez-vous à votre compte Etam Connect',
+    connectToAccount: 'Connectez-vous à votre compte',
     personalizedExperience: 'Bénéficiez d\'une expérience 100% personnalisée !',
     needHelp: 'Besoin d\'aide ?',
     myAccount: 'Mon compte',

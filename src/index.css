@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  /* Remove potentially conflicting global color */
+  /* color: rgba(255, 255, 255, 0.87); */
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Override browser autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #F3F4F6 inset !important; /* Use gray-100 color */
+  box-shadow: 0 0 0 30px #F3F4F6 inset !important; /* Use gray-100 color */
+  /* Keep text color override */
+  -webkit-text-fill-color: black !important;
+  /* Remove transition hack as it didn't solve the issue */
+  /* transition: background-color 5000s ease-in-out 0s; */
+}
+
+/* For dark mode, if you have one, you might use a different color */
+/*
+dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #your-dark-bg-color inset !important;
+  box-shadow: 0 0 0 30px #your-dark-bg-color inset !important;
+  -webkit-text-fill-color: #your-dark-text-color !important;
+}
+*/
+
 html {
     scroll-behavior: smooth;
   }

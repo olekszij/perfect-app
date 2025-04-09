@@ -17,6 +17,7 @@ const Calendar = ({ selectedDate, onChange }) => {
   const [displayedMonth, setDisplayedMonth] = useState(selectedDate || new Date());
   const [isOpen, setIsOpen] = useState(false);
   const calendarRef = useRef(null);
+  const [isTouched, setIsTouched] = useState(false);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -72,6 +73,8 @@ const Calendar = ({ selectedDate, onChange }) => {
 
   const handleDateClick = (date) => {
     onChange(date);
+    setIsTouched(true);
+    setIsOpen(false);
   };
 
   const days = getDaysInMonth(displayedMonth);
@@ -99,7 +102,7 @@ const Calendar = ({ selectedDate, onChange }) => {
   return (
     <div className="relative" ref={calendarRef}>
       <div 
-        className="flex items-center w-full cursor-pointer bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black"
+        className={`flex items-center w-full cursor-pointer p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${isTouched ? 'bg-green-100' : 'bg-gray-100'}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <FontAwesomeIcon icon={faCalendarDays} className="text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
@@ -139,7 +142,6 @@ const Calendar = ({ selectedDate, onChange }) => {
                 key={index}
                 onClick={() => {
                   handleDateClick(day.date);
-                  setIsOpen(false);
                 }}
                 disabled={day.date < new Date()}
                 className={`h-14 flex items-center justify-center relative text-base
@@ -170,6 +172,7 @@ Calendar.propTypes = {
 const TimeWheel = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pickerRef = useRef(null);
+  const [isTouched, setIsTouched] = useState(false);
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
   const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
@@ -192,13 +195,14 @@ const TimeWheel = ({ value, onChange }) => {
     const newTime = `${hour}:${minute}`;
     setSelectedTime(newTime);
     onChange({ target: { name: 'time', value: newTime } });
+    setIsTouched(true);
     setIsOpen(false);
   };
 
   return (
     <div className="relative" ref={pickerRef}>
       <div 
-        className="flex items-center w-full cursor-pointer bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black"
+        className={`flex items-center w-full cursor-pointer p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${isTouched ? 'bg-green-100' : 'bg-gray-100'}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <FontAwesomeIcon icon={faClock} className="text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
@@ -275,6 +279,7 @@ const SelectPassengers = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
   const { t } = useLanguage();
+  const [isTouched, setIsTouched] = useState(false);
 
   const passengerOptions = Array.from({ length: 8 }, (_, i) => i + 1);
 
@@ -292,7 +297,7 @@ const SelectPassengers = ({ value, onChange }) => {
   return (
     <div className="relative" ref={selectRef}>
       <div 
-        className="flex items-center w-full cursor-pointer bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black"
+        className={`flex items-center w-full cursor-pointer p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${isTouched ? 'bg-green-100' : 'bg-gray-100'}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <FontAwesomeIcon icon={faUsers} className="text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
@@ -317,6 +322,7 @@ const SelectPassengers = ({ value, onChange }) => {
                   }`}
                   onClick={() => {
                     onChange({ target: { name: 'passengers', value: num } });
+                    setIsTouched(true);
                     setIsOpen(false);
                   }}
                 >
@@ -335,10 +341,16 @@ const SelectPassengers = ({ value, onChange }) => {
   );
 };
 
+SelectPassengers.propTypes = {
+  value: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired
+};
+
 const SelectLuggage = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
   const { t } = useLanguage();
+  const [isTouched, setIsTouched] = useState(false);
 
   const luggageOptions = Array.from({ length: 5 }, (_, i) => i);
 
@@ -356,7 +368,7 @@ const SelectLuggage = ({ value, onChange }) => {
   return (
     <div className="relative" ref={selectRef}>
       <div 
-        className="flex items-center w-full cursor-pointer bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black"
+        className={`flex items-center w-full cursor-pointer p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${isTouched ? 'bg-green-100' : 'bg-gray-100'}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <FontAwesomeIcon icon={faSuitcase} className="text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
@@ -381,6 +393,7 @@ const SelectLuggage = ({ value, onChange }) => {
                   }`}
                   onClick={() => {
                     onChange({ target: { name: 'luggage', value: num } });
+                    setIsTouched(true);
                     setIsOpen(false);
                   }}
                 >
@@ -399,10 +412,16 @@ const SelectLuggage = ({ value, onChange }) => {
   );
 };
 
+SelectLuggage.propTypes = {
+  value: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired
+};
+
 const SelectDuration = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
   const { t } = useLanguage();
+  const [isTouched, setIsTouched] = useState(false);
 
   const durationOptions = Array.from({ length: 12 }, (_, i) => i + 1);
 
@@ -418,7 +437,7 @@ const SelectDuration = ({ value, onChange }) => {
   }, []);
 
   return (
-    <div className="relative bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black" ref={selectRef}>
+    <div className={`relative p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${isTouched ? 'bg-green-100' : 'bg-gray-100'}`} ref={selectRef}>
       <label className="text-gray-700 font-medium absolute top-1 left-4 text-sm">
         {t('duration')}
       </label>
@@ -448,6 +467,7 @@ const SelectDuration = ({ value, onChange }) => {
                   }`}
                   onClick={() => {
                     onChange({ target: { name: 'hours', value: num } });
+                    setIsTouched(true);
                     setIsOpen(false);
                   }}
                 >
@@ -464,16 +484,6 @@ const SelectDuration = ({ value, onChange }) => {
       )}
     </div>
   );
-};
-
-SelectPassengers.propTypes = {
-  value: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired
-};
-
-SelectLuggage.propTypes = {
-  value: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired
 };
 
 SelectDuration.propTypes = {
@@ -497,18 +507,19 @@ export default function BookingForm() {
       };
     }
     return {
-      serviceType: 'oneWay',
-      from: '',
-      to: '',
-      date: new Date(),
+    serviceType: 'oneWay',
+    from: '',
+    to: '',
+    date: new Date(),
       time: '12:00',
-      passengers: 1,
-      luggage: 0,
-      hours: 1
+    passengers: 1,
+    luggage: 0,
+    hours: 1
     };
   };
 
   const [formData, setFormData] = useState(getInitialFormData());
+  const [touchedFields, setTouchedFields] = useState({});
 
   // Save form data to localStorage whenever it changes
   useEffect(() => {
@@ -531,38 +542,53 @@ export default function BookingForm() {
     }));
   };
 
+  // Handler for text input blur
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouchedFields(prev => ({ ...prev, [name]: true }));
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Service Type Toggle */}
-        <div className="relative bg-gradient-to-b from-gray-100 to-gray-200 rounded-lg p-1 shadow-inner">
-          <div className="flex relative z-0">
-            <button
-              type="button"
-              onClick={() => setFormData(prev => ({ ...prev, serviceType: 'oneWay' }))}
-              className={`flex-1 py-3 px-4 text-center relative z-10 transition-all duration-200 rounded-md
-                ${formData.serviceType === 'oneWay' 
-                  ? 'bg-black text-[#4ade80] font-medium' 
-                  : 'text-gray-500 hover:text-gray-700'}`}
-            >
-              {t('oneWay')}
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormData(prev => ({ ...prev, serviceType: 'byHour' }))}
-              className={`flex-1 py-3 px-4 text-center relative z-10 transition-all duration-200 rounded-md
-                ${formData.serviceType === 'byHour' 
-                  ? 'bg-black text-[#4ade80] font-medium' 
-                  : 'text-gray-500 hover:text-gray-700'}`}
-            >
-              {t('byHour')}
-            </button>
+        <div className="flex items-center justify-center mb-6">
+          <div className="relative inline-flex items-center bg-gray-100 rounded-full p-1 shadow-inner">
+            <div className="relative flex">
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, serviceType: 'oneWay' }))}
+                className={`relative z-10 px-6 py-2 rounded-full transition-all duration-300 ${
+                  formData.serviceType === 'oneWay'
+                    ? 'text-gray-800'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {t('oneWay')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, serviceType: 'byHour' }))}
+                className={`relative z-10 px-6 py-2 rounded-full transition-all duration-300 ${
+                  formData.serviceType === 'byHour'
+                    ? 'text-gray-800'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {t('byHour')}
+              </button>
+              <div 
+                className={`absolute left-0 top-0 h-full w-1/2 bg-white rounded-full shadow-md transition-transform duration-300 ${
+                  formData.serviceType === 'oneWay' ? 'translate-x-0' : 'translate-x-full'
+                }`}
+              />
+            </div>
           </div>
         </div>
 
         {/* Location Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="relative bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black">
+          <div className={`relative p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${touchedFields.from && formData.from ? 'bg-green-100' : 'bg-gray-100'}`}>
             <label htmlFor="from" className="text-gray-700 font-medium absolute top-1 left-4 text-sm">
               {t('pickupLocation')}
             </label>
@@ -571,21 +597,22 @@ export default function BookingForm() {
                 icon={faLocationDot} 
                 className="text-gray-400 mr-3 pt-2 group-hover:text-gray-600 transition-colors" 
               />
-              <input
-                type="text"
-                id="from"
-                name="from"
-                value={formData.from}
-                onChange={handleInputChange}
+            <input
+              type="text"
+              id="from"
+              name="from"
+              value={formData.from}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
                 className="w-full bg-transparent focus:outline-none pt-2 font-medium placeholder-gray-400"
                 placeholder={t('enterPickupAddress')}
-                required
-              />
+              required
+            />
             </div>
           </div>
 
           {formData.serviceType === 'oneWay' ? (
-            <div className="relative bg-gray-100 p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black">
+            <div className={`relative p-4 rounded-lg group focus-within:ring-2 focus-within:ring-black ${touchedFields.to && formData.to ? 'bg-green-100' : 'bg-gray-100'}`}>
               <label htmlFor="to" className="text-gray-700 font-medium absolute top-1 left-4 text-sm">
                 {t('dropoffLocation')}
               </label>
@@ -594,17 +621,18 @@ export default function BookingForm() {
                   icon={faLocationDot} 
                   className="text-gray-400 mr-3 pt-2 group-hover:text-gray-600 transition-colors" 
                 />
-                <input
-                  type="text"
-                  id="to"
-                  name="to"
-                  value={formData.to}
-                  onChange={handleInputChange}
+              <input
+                type="text"
+                id="to"
+                name="to"
+                value={formData.to}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
                   className="w-full bg-transparent focus:outline-none pt-2 font-medium placeholder-gray-400"
                   placeholder={t('enterDropoffAddress')}
-                  required
-                />
-              </div>
+                required
+              />
+            </div>
             </div>
           ) : (
             <SelectDuration
@@ -634,21 +662,26 @@ export default function BookingForm() {
         {/* Passengers and Luggage */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SelectPassengers
-            value={formData.passengers}
-            onChange={handleInputChange}
+              value={formData.passengers}
+              onChange={handleInputChange}
           />
           <SelectLuggage
-            value={formData.luggage}
-            onChange={handleInputChange}
+              value={formData.luggage}
+              onChange={handleInputChange}
           />
         </div>
 
-        {/* Book a Ride Button */}
+        {/* Waiting Time Note */}
+        <div className="text-sm text-gray-500 text-center">
+          Chauffeur will wait 15 minutes free of charge
+        </div>
+
+        {/* Continue Button */}
         <button
           type="submit"
           className="w-full bg-black text-white py-4 px-8 rounded-xl font-medium hover:bg-gray-900 transition-colors text-lg"
         >
-          {t('bookRide')}
+          Continue
         </button>
       </form>
     </div>

@@ -45,12 +45,12 @@ const LanguageSwitcher = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-gray-900"
+        className="p-2 text-gray-700 hover:text-gray-900"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <svg
-          className="w-5 h-5"
+          className="w-6 h-6"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -62,42 +62,29 @@ const LanguageSwitcher = () => {
             d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span className="text-sm font-medium">
-          {languages.find(lang => lang.code === language)?.name}
-        </span>
-        <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
       </button>
 
       {isOpen && (
         <div 
-          className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50"
-          role="menu"
-          aria-orientation="vertical"
+          className="fixed md:absolute inset-x-0 md:inset-auto top-16 md:top-full md:mt-1 bg-white shadow-lg md:rounded-lg md:w-48 md:right-0 z-50 h-[calc(100vh-4rem)] md:h-auto overflow-y-auto"
         >
-          {languages.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => handleLanguageChange(lang.code)}
-              className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 ${
-                language === lang.code ? 'text-blue-600 font-medium' : 'text-gray-700'
-              }`}
-              role="menuitem"
-            >
-              {lang.name}
-            </button>
-          ))}
+          <div className="max-w-7xl mx-auto">
+            <div className="py-6 px-1">
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => handleLanguageChange(lang.code)}
+                  className={`w-full px-4 py-5 md:py-4 text-center text-2xl md:text-xl font-bold hover:bg-gray-100 ${
+                    language === lang.code 
+                      ? 'text-black font-black bg-gray-50' 
+                      : 'text-gray-700'
+                  }`}
+                >
+                  {lang.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

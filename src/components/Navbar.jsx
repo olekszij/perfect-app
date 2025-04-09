@@ -7,9 +7,11 @@ import Modal from './Modal/Modal';
 import BookingForm from './BookingForm/BookingForm';
 
 const Navbar = () => {
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1600);
+  const [isServicesOpen, setIsServicesOpen] = useState(isMobileView);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const servicesRef = useRef(null);
   const userMenuRef = useRef(null);
   const { t } = useLanguage();
@@ -20,9 +22,25 @@ const Navbar = () => {
     console.log('Auth state:', { isAuthenticated, user });
   }, [isAuthenticated, user]);
 
+  // Update mobile view state
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      setIsMobileView(isMobile);
+      setIsServicesOpen(isMobile);
+    };
+
+    // Set initial state
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Handle clicks outside services menu (desktop only)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (servicesRef.current && !servicesRef.current.contains(event.target)) {
+      if (!isMobileView && servicesRef.current && !servicesRef.current.contains(event.target)) {
         setIsServicesOpen(false);
       }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -32,8 +50,9 @@ const Navbar = () => {
 
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
-        setIsServicesOpen(false);
+        setIsServicesOpen(isMobileView);
         setIsUserMenuOpen(false);
+        setIsMobileMenuOpen(false);
       }
     };
 
@@ -44,11 +63,25 @@ const Navbar = () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, []);
+  }, [isMobileView]);
 
   const handleLogout = () => {
     logout();
     setIsUserMenuOpen(false);
+  };
+
+  const handleServiceClick = (path) => {
+    if (!isMobileView) {
+      setIsServicesOpen(false);
+    }
+    setIsMobileMenuOpen(false);
+    window.location.href = path;
+  };
+
+  const toggleServices = () => {
+    if (!isMobileView) {
+      setIsServicesOpen(!isServicesOpen);
+    }
   };
 
   const menuItems = [
@@ -86,19 +119,19 @@ const Navbar = () => {
     if (!isAuthenticated) {
       return (
         <>
-          <div className="text-xl font-semibold mb-4">{t('connectToAccount')}</div>
-          <p className="text-sm text-gray-600 mb-6">{t('personalizedExperience')}</p>
-          <div className="space-y-4 mb-6">
+          <div className="text-2xl font-black mb-3 text-center">{t('connectToAccount')}</div>
+          <p className="text-base text-gray-600 mb-6 text-center">{t('personalizedExperience')}</p>
+          <div className="space-y-3 mb-4">
             <Link
               to="/login"
-              className="block w-full text-center bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+              className="block w-full text-center bg-black text-white px-4 py-3 rounded-lg text-base font-bold hover:bg-gray-800"
               onClick={() => setIsUserMenuOpen(false)}
             >
               {t('login')}
             </Link>
             <Link
               to="/register"
-              className="block w-full text-center border border-black text-black px-4 py-2 rounded hover:bg-gray-100"
+              className="block w-full text-center border-2 border-black text-black px-4 py-3 rounded-lg text-base font-bold hover:bg-gray-100"
               onClick={() => setIsUserMenuOpen(false)}
             >
               {t('register')}
@@ -110,7 +143,7 @@ const Navbar = () => {
 
     return (
       <>
-        <div className="text-xl font-semibold mb-4">
+        <div className="text-2xl font-black mb-4 text-center">
           {t('welcome')}, {user?.firstName || user?.name || t('user')}!
         </div>
         <div className="space-y-2 mb-6">
@@ -118,7 +151,7 @@ const Navbar = () => {
             <Link
               key={index}
               to={item.link}
-              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-150"
+              className="flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
               onClick={() => setIsUserMenuOpen(false)}
             >
               <span className="text-gray-500 mr-3">{item.icon}</span>
@@ -129,7 +162,7 @@ const Navbar = () => {
         <div className="border-t border-gray-200 my-4"></div>
         <button
           onClick={handleLogout}
-          className="w-full text-center bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+          className="w-full text-center bg-black text-white px-4 py-3 rounded-lg text-base font-bold hover:bg-gray-800"
         >
           {t('logout')}
         </button>
@@ -142,17 +175,16 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold">
+          <Link to="/" className="text-2xl font-extrabold text-black">
             Perfect Cab
           </Link>
 
-          {/* Main Navigation */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {/* Services Dropdown */}
             <div className="relative" ref={servicesRef}>
               <button
-                className="flex items-center space-x-1 text-gray-800 hover:text-black"
-                onClick={() => setIsServicesOpen(!isServicesOpen)}
+                className="flex items-center space-x-1 text-gray-800 hover:text-black text-center text-xl font-bold"
+                onClick={toggleServices}
                 aria-expanded={isServicesOpen}
                 aria-haspopup="true"
               >
@@ -167,64 +199,52 @@ const Navbar = () => {
                 </svg>
               </button>
 
-              {/* Services Dropdown Menu */}
               {isServicesOpen && (
                 <div 
-                  className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2"
-                  role="menu"
-                  aria-orientation="vertical"
+                  className="absolute left-0 mt-1 w-56 bg-white rounded-lg shadow-lg py-2"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Link
-                    to="/hourly-hire"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => setIsServicesOpen(false)}
+                  <button 
+                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    onClick={() => handleServiceClick('/hourly-hire')}
                   >
                     {t('hourlyHire')}
-                  </Link>
-                  <Link
-                    to="/city-to-city"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => setIsServicesOpen(false)}
+                  </button>
+                  <button 
+                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    onClick={() => handleServiceClick('/city-to-city')}
                   >
                     {t('cityToCity')}
-                  </Link>
-                  <Link
-                    to="/airport-transfers"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => setIsServicesOpen(false)}
+                  </button>
+                  <button 
+                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    onClick={() => handleServiceClick('/airport-transfers')}
                   >
                     {t('airportTransfers')}
-                  </Link>
-                  <Link
-                    to="/wedding-chauffeur"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => setIsServicesOpen(false)}
+                  </button>
+                  <button 
+                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    onClick={() => handleServiceClick('/wedding-chauffeur')}
                   >
                     {t('weddingChauffeur')}
-                  </Link>
-                  <Link
-                    to="/fashion-week"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => setIsServicesOpen(false)}
+                  </button>
+                  <button 
+                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    onClick={() => handleServiceClick('/fashion-week')}
                   >
                     {t('fashionWeek')}
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
 
-            <Link to="/fleet" className="text-gray-800 hover:text-black">
+            <Link to="/fleet" className="text-gray-800 hover:text-black text-center text-xl font-bold">
               {t('fleet')}
             </Link>
-            <Link to="/special-offers" className="text-gray-800 hover:text-black">
+            <Link to="/special-offers" className="text-gray-800 hover:text-black text-center text-xl font-bold">
               {t('specialOffers')}
             </Link>
-            <Link to="/contact" className="text-gray-800 hover:text-black">
+            <Link to="/contact" className="text-gray-800 hover:text-black text-center text-xl font-bold">
               {t('contact')}
             </Link>
           </div>
@@ -234,23 +254,24 @@ const Navbar = () => {
             {/* Book a Ride Button */}
             <button
               onClick={() => setIsBookingModalOpen(true)}
-              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-xl font-bold"
             >
               Book a Ride
             </button>
 
+            {/* Language Switcher */}
             <LanguageSwitcher />
-            
-            {/* User Menu Dropdown */}
+
+            {/* User Menu */}
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
+                className="p-2 text-gray-700 hover:text-gray-900 rounded-full hover:bg-gray-100"
                 aria-expanded={isUserMenuOpen}
                 aria-haspopup="true"
               >
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -262,47 +283,102 @@ const Navbar = () => {
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                <span className="text-sm font-medium">
-                  {isAuthenticated ? (user?.firstName || user?.name || t('myAccount')) : t('seConnecter')}
-                </span>
               </button>
 
               {isUserMenuOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-6 px-4"
-                  role="menu"
-                  aria-orientation="vertical"
-                >
-                  {renderUserMenu()}
-
-                  {/* Help Link */}
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <Link
-                      to="/help"
-                      className="flex items-center text-gray-600 hover:text-black"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      <svg
-                        className="w-5 h-5 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {t('needHelp')}
-                    </Link>
+                <div className="fixed md:absolute inset-x-0 md:inset-auto top-16 md:top-full md:mt-1 bg-white shadow-lg md:rounded-lg md:w-72 md:right-0 z-50 h-[calc(100vh-4rem)] md:h-auto overflow-y-auto">
+                  <div className="max-w-7xl mx-auto px-4 py-4">
+                    {renderUserMenu()}
                   </div>
                 </div>
               )}
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden fixed inset-x-0 top-16 bg-white h-[calc(100vh-4rem)] overflow-y-auto">
+            <div className="px-4 pt-4 pb-6 space-y-3">
+              <div className="relative">
+                <button
+                  className="w-full flex items-center justify-between px-4 py-4 rounded-lg text-2xl font-bold text-gray-800 hover:text-black hover:bg-gray-100"
+                  onClick={() => setIsServicesOpen(!isServicesOpen)}
+                >
+                  <span>{t('services')}</span>
+                  <svg
+                    className={`w-6 h-6 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`}
+                  >
+                    {isServicesOpen ? (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    ) : (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    )}
+                  </svg>
+                </button>
+              </div>
+              <div className="space-y-2">
+                <Link
+                  to="/fleet"
+                  className="block w-full text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  {t('fleet')}
+                </Link>
+                <Link
+                  to="/special-offers"
+                  className="block w-full text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  {t('specialOffers')}
+                </Link>
+                <Link
+                  to="/contact"
+                  className="block w-full text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  {t('contact')}
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Booking Form Modal */}
@@ -313,4 +389,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;
