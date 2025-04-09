@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const LanguageContext = createContext();
 
@@ -71,6 +72,21 @@ const translations = {
     completedTrips: 'Completed Trips',
     totalInvoices: 'Total Invoices',
     savedAddresses: 'Saved Addresses',
+    oneWay: 'One Way',
+    byHour: 'By the Hour',
+    pickupLocation: 'Pick-up Location',
+    dropoffLocation: 'Drop-off Location',
+    enterPickupAddress: 'Enter pick-up address',
+    enterDropoffAddress: 'Enter drop-off address',
+    duration: 'Duration',
+    hours: 'Hours',
+    minutes: 'Minutes',
+    hour: 'hour',
+    hours_plural: 'hours',
+    passenger: 'passenger',
+    passengers: 'passengers',
+    piece: 'piece',
+    pieces: 'pieces',
   },
   fr: {
     home: 'Accueil',
@@ -140,6 +156,21 @@ const translations = {
     completedTrips: 'Voyages terminés',
     totalInvoices: 'Total des factures',
     savedAddresses: 'Adresses enregistrées',
+    oneWay: 'Aller simple',
+    byHour: 'À l\'heure',
+    pickupLocation: 'Lieu de prise en charge',
+    dropoffLocation: 'Lieu de dépose',
+    enterPickupAddress: 'Entrez l\'adresse de prise en charge',
+    enterDropoffAddress: 'Entrez l\'adresse de dépose',
+    duration: 'Durée',
+    hours: 'Heures',
+    minutes: 'Minutes',
+    hour: 'heure',
+    hours_plural: 'heures',
+    passenger: 'passager',
+    passengers: 'passagers',
+    piece: 'bagage',
+    pieces: 'bagages',
   },
   ru: {
     home: 'Главная',
@@ -209,6 +240,21 @@ const translations = {
     completedTrips: 'Завершенные поездки',
     totalInvoices: 'Всего счетов',
     savedAddresses: 'Сохраненные адреса',
+    oneWay: 'В одну сторону',
+    byHour: 'Почасовая',
+    pickupLocation: 'Место посадки',
+    dropoffLocation: 'Место высадки',
+    enterPickupAddress: 'Введите адрес посадки',
+    enterDropoffAddress: 'Введите адрес высадки',
+    duration: 'Длительность',
+    hours: 'Часы',
+    minutes: 'Минуты',
+    hour: 'час',
+    hours_plural: 'часов',
+    passenger: 'пассажир',
+    passengers: 'пассажиров',
+    piece: 'место',
+    pieces: 'мест',
   },
   es: {
     home: 'Inicio',
@@ -278,6 +324,21 @@ const translations = {
     completedTrips: 'Viajes completados',
     totalInvoices: 'Total de facturas',
     savedAddresses: 'Direcciones guardadas',
+    oneWay: 'Un sentido',
+    byHour: 'Por hora',
+    pickupLocation: 'Lugar de recogida',
+    dropoffLocation: 'Lugar de destino',
+    enterPickupAddress: 'Ingrese la dirección de recogida',
+    enterDropoffAddress: 'Ingrese la dirección de destino',
+    duration: 'Duración',
+    hours: 'Horas',
+    minutes: 'Minutos',
+    hour: 'hora',
+    hours_plural: 'horas',
+    passenger: 'pasajero',
+    passengers: 'pasajeros',
+    piece: 'pieza',
+    pieces: 'piezas',
   },
   de: {
     home: 'Startseite',
@@ -347,6 +408,21 @@ const translations = {
     completedTrips: 'Abgeschlossene Fahrten',
     totalInvoices: 'Gesamtrechnungen',
     savedAddresses: 'Gespeicherte Adressen',
+    oneWay: 'Einfache Fahrt',
+    byHour: 'Nach Stunden',
+    pickupLocation: 'Abholort',
+    dropoffLocation: 'Zielort',
+    enterPickupAddress: 'Geben Sie den Abholort ein',
+    enterDropoffAddress: 'Geben Sie den Zielort ein',
+    duration: 'Dauer',
+    hours: 'Stunden',
+    minutes: 'Minuten',
+    hour: 'Stunde',
+    hours_plural: 'Stunden',
+    passenger: 'Passagier',
+    passengers: 'Passagiere',
+    piece: 'Gepäckstück',
+    pieces: 'Gepäckstücke',
   },
 };
 
@@ -362,6 +438,10 @@ export const LanguageProvider = ({ children }) => {
       {children}
     </LanguageContext.Provider>
   );
+};
+
+LanguageProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export const useLanguage = () => {

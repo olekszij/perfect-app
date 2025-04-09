@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher/LanguageSwitcher';
+import Modal from './Modal/Modal';
+import BookingForm from './BookingForm/BookingForm';
 
 const Navbar = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const servicesRef = useRef(null);
   const userMenuRef = useRef(null);
   const { t } = useLanguage();
@@ -228,6 +231,14 @@ const Navbar = () => {
 
           {/* Right Side Items */}
           <div className="flex items-center space-x-4">
+            {/* Book a Ride Button */}
+            <button
+              onClick={() => setIsBookingModalOpen(true)}
+              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              Book a Ride
+            </button>
+
             <LanguageSwitcher />
             
             {/* User Menu Dropdown */}
@@ -290,17 +301,14 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            
-            {/* Book a Ride Button */}
-            <Link
-              to="/booking"
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
-            >
-              {t('bookRide')}
-            </Link>
           </div>
         </div>
       </div>
+
+      {/* Booking Form Modal */}
+      <Modal isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)}>
+        <BookingForm />
+      </Modal>
     </nav>
   );
 };

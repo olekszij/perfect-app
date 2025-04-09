@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -7,55 +8,64 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on initial load
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const token = localStorage.getItem('userToken');
+    const userData = localStorage.getItem('userData');
+    
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
     try {
-      // Here you would typically make an API call to your backend
-      // For now, we'll just simulate a successful login
-      const mockUser = {
-        id: '1',
+      const response = await axios.post('http://localhost:5001/api/auth/login', {
         email,
-        firstName: email.split('@')[0], // Use part before @ as firstName
-        name: email.split('@')[0], // Use part before @ as name
-      };
+        password
+      });
+
+      const { token, user } = response.data;
       
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      setUser(user);
+      localStorage.setItem('userToken', token);
+      localStorage.setItem('userData', JSON.stringify(user));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.message };
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Login failed' 
+      };
     }
   };
 
   const register = async (userData) => {
     try {
-      // Here you would typically make an API call to your backend
-      // For now, we'll just simulate a successful registration
-      const mockUser = {
-        id: '1',
-        ...userData,
-        firstName: userData.firstName || userData.email.split('@')[0], // Ensure we have firstName
-        name: userData.name || userData.email.split('@')[0], // Ensure we have name
-      };
+      const response = await axios.post('http://localhost:5001/api/auth/register', userData);
       
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      const { token, user } = response.data;
+      
+      setUser(user);
+      localStorage.setItem('userToken', token);
+      localStorage.setItem('userData', JSON.stringify(user));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.message };
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Registration failed' 
+      };
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userData');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   const value = {
@@ -64,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    isAuthenticated: !!user, // Add isAuthenticated flag
+    isAuthenticated: !!user,
   };
 
   return (

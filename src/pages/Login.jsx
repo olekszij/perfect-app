@@ -29,10 +29,10 @@ const Login = () => {
       if (result.success) {
         navigate('/dashboard');
       } else {
-        setError(result.error || 'Login failed');
+        setError(result.error || t('loginFailed'));
       }
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || t('loginFailed'));
     }
   };
 
