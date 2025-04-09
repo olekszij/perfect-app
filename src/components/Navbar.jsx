@@ -2,13 +2,15 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import LanguageSwitcher from './LanguageSwitcher/LanguageSwitcher';
 import Modal from './Modal/Modal';
 import BookingForm from './BookingForm/BookingForm';
 
 const Navbar = () => {
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1600);
-  const [isServicesOpen, setIsServicesOpen] = useState(isMobileView);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+  const [isServicesOpen, setIsServicesOpen] = useState(window.innerWidth < 768);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,7 +29,11 @@ const Navbar = () => {
     const handleResize = () => {
       const isMobile = window.innerWidth < 768;
       setIsMobileView(isMobile);
-      setIsServicesOpen(isMobile);
+      if (isMobile && !isMobileMenuOpen) {
+        setIsServicesOpen(true);
+      } else if (!isMobile) {
+        setIsServicesOpen(false);
+      }
     };
 
     // Set initial state
@@ -50,7 +56,9 @@ const Navbar = () => {
 
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
-        setIsServicesOpen(isMobileView);
+        if (!isMobileView) {
+          setIsServicesOpen(false);
+        }
         setIsUserMenuOpen(false);
         setIsMobileMenuOpen(false);
       }
@@ -79,9 +87,7 @@ const Navbar = () => {
   };
 
   const toggleServices = () => {
-    if (!isMobileView) {
-      setIsServicesOpen(!isServicesOpen);
-    }
+    setIsServicesOpen(!isServicesOpen);
   };
 
   const menuItems = [
@@ -183,7 +189,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <div className="relative" ref={servicesRef}>
               <button
-                className="flex items-center space-x-1 text-gray-800 hover:text-black text-center text-xl font-bold"
+                className="flex items-center space-x-1 text-gray-800 hover:text-black text-center text-base font-bold"
                 onClick={toggleServices}
                 aria-expanded={isServicesOpen}
                 aria-haspopup="true"
@@ -205,31 +211,31 @@ const Navbar = () => {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button 
-                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-base font-bold text-center text-gray-800 hover:bg-gray-100"
                     onClick={() => handleServiceClick('/hourly-hire')}
                   >
                     {t('hourlyHire')}
                   </button>
                   <button 
-                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-base font-bold text-center text-gray-800 hover:bg-gray-100"
                     onClick={() => handleServiceClick('/city-to-city')}
                   >
                     {t('cityToCity')}
                   </button>
                   <button 
-                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-base font-bold text-center text-gray-800 hover:bg-gray-100"
                     onClick={() => handleServiceClick('/airport-transfers')}
                   >
                     {t('airportTransfers')}
                   </button>
                   <button 
-                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-base font-bold text-center text-gray-800 hover:bg-gray-100"
                     onClick={() => handleServiceClick('/wedding-chauffeur')}
                   >
                     {t('weddingChauffeur')}
                   </button>
                   <button 
-                    className="block w-full px-4 py-2 text-xl font-bold text-center text-gray-800 hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-base font-bold text-center text-gray-800 hover:bg-gray-100"
                     onClick={() => handleServiceClick('/fashion-week')}
                   >
                     {t('fashionWeek')}
@@ -238,25 +244,26 @@ const Navbar = () => {
               )}
             </div>
 
-            <Link to="/fleet" className="text-gray-800 hover:text-black text-center text-xl font-bold">
+            <Link to="/fleet" className="text-gray-800 hover:text-black text-center text-base font-bold">
               {t('fleet')}
             </Link>
-            <Link to="/special-offers" className="text-gray-800 hover:text-black text-center text-xl font-bold">
+            <Link to="/special-offers" className="text-gray-800 hover:text-black text-center text-base font-bold">
               {t('specialOffers')}
             </Link>
-            <Link to="/contact" className="text-gray-800 hover:text-black text-center text-xl font-bold">
+            <Link to="/contact" className="text-gray-800 hover:text-black text-center text-base font-bold">
               {t('contact')}
             </Link>
           </div>
 
           {/* Right Side Items */}
           <div className="flex items-center space-x-4">
-            {/* Book a Ride Button */}
+            {/* Book a Ride Button (Icon) */}
             <button
               onClick={() => setIsBookingModalOpen(true)}
-              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-xl font-bold"
+              className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors p-2 text-lg"
+              aria-label="Book a Ride"
             >
-              Book a Ride
+              <FontAwesomeIcon icon={faCalendarPlus} />
             </button>
 
             {/* Language Switcher */}
@@ -329,49 +336,76 @@ const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden fixed inset-x-0 top-16 bg-white h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="px-4 pt-4 pb-6 space-y-3">
-              <div className="relative">
+              <div className="relative rounded-lg overflow-hidden">
                 <button
-                  className="w-full flex items-center justify-between px-4 py-4 rounded-lg text-2xl font-bold text-gray-800 hover:text-black hover:bg-gray-100"
-                  onClick={() => setIsServicesOpen(!isServicesOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 text-xl font-bold text-gray-800 bg-gray-50"
+                  onClick={toggleServices}
                 >
                   <span>{t('services')}</span>
                   <svg
-                    className={`w-6 h-6 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {isServicesOpen ? (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    ) : (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    )}
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
+                {isServicesOpen && (
+                  <div className="py-2 px-4 bg-white border-t border-gray-200">
+                    <button
+                      className="block w-full py-3 text-left text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      onClick={() => handleServiceClick('/hourly-hire')}
+                    >
+                      {t('hourlyHire')}
+                    </button>
+                    <button
+                      className="block w-full py-3 text-left text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      onClick={() => handleServiceClick('/city-to-city')}
+                    >
+                      {t('cityToCity')}
+                    </button>
+                    <button
+                      className="block w-full py-3 text-left text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      onClick={() => handleServiceClick('/airport-transfers')}
+                    >
+                      {t('airportTransfers')}
+                    </button>
+                    <button
+                      className="block w-full py-3 text-left text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      onClick={() => handleServiceClick('/wedding-chauffeur')}
+                    >
+                      {t('weddingChauffeur')}
+                    </button>
+                    <button
+                      className="block w-full py-3 text-left text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      onClick={() => handleServiceClick('/fashion-week')}
+                    >
+                      {t('fashionWeek')}
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className="space-y-2">
+
+              <div className="space-y-1 pt-2">
                 <Link
                   to="/fleet"
-                  className="block w-full text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="block w-full px-4 py-3 text-lg font-bold text-gray-800 hover:bg-gray-100 rounded-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('fleet')}
                 </Link>
                 <Link
                   to="/special-offers"
-                  className="block w-full text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="block w-full px-4 py-3 text-lg font-bold text-gray-800 hover:bg-gray-100 rounded-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('specialOffers')}
                 </Link>
                 <Link
                   to="/contact"
-                  className="block w-full text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="block w-full px-4 py-3 text-lg font-bold text-gray-800 hover:bg-gray-100 rounded-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('contact')}
                 </Link>
