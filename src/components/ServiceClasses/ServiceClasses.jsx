@@ -21,7 +21,7 @@ const ServiceClasses = () => {
         <h2 className="text-3xl font-bold text-center mb-8">Fleet</h2>
 
         {/* Карточки классов */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {serviceClassesData.map((service, index) => (
             <Card
               key={index}

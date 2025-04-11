@@ -1,87 +1,177 @@
-import React from 'react';
+// import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSuitcase, faCoins, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUser,
+  faSuitcase,
+  faUsers,
+  faBriefcase,
+  faUserGroup,
+  faLocationDot,
+  faLeaf,
+  faTimes,
+  faChevronLeft,
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+const getIcon = (iconName) => {
+  const icons = {
+    user: faUser,
+    users: faUsers,
+    suitcase: faSuitcase,
+    suitcases: faBriefcase,
+    group: faUserGroup,
+    location: faLocationDot,
+    leaf: faLeaf
+  };
+  return icons[iconName] || faUser;
+};
+
+const CustomPrevArrow = (props) => (
+  <button
+    onClick={props.onClick}
+    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+  >
+    <FontAwesomeIcon icon={faChevronLeft} className="text-white text-lg" />
+  </button>
+);
+
+CustomPrevArrow.propTypes = {
+  onClick: PropTypes.func
+};
+
+const CustomNextArrow = (props) => (
+  <button
+    onClick={props.onClick}
+    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+  >
+    <FontAwesomeIcon icon={faChevronRight} className="text-white text-lg" />
+  </button>
+);
+
+CustomNextArrow.propTypes = {
+  onClick: PropTypes.func
+};
 
 const ServiceClassDetail = ({ serviceClass, onClose }) => {
   if (!serviceClass) return null;
 
-  const { title, image, description, features, pricePerHour, carModels } = serviceClass;
+  const { title, image, description, features, price, cars } = serviceClass;
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      onClick={onClose} // Закрытие при клике на тёмную область
+      className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-2 sm:p-4"
+      onClick={onClose}
     >
       <div
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative overflow-y-auto max-h-[90vh] sm:max-h-[80vh] mx-4" // Добавлены отступы mx-4
-        onClick={(e) => e.stopPropagation()} // Предотвращение закрытия при клике внутри окна
+        className="bg-white rounded-2xl shadow-lg w-full max-w-4xl overflow-hidden flex flex-col md:flex-row h-auto max-h-[98vh] my-auto"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Кнопка закрытия */}
         <button
-          className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
+          className="absolute top-2 right-2 md:top-4 md:right-4 text-white hover:text-gray-200 z-10"
           onClick={onClose}
         >
           <FontAwesomeIcon icon={faTimes} size="lg" />
         </button>
 
-        <div className="text-center">
+        <div className="w-full md:w-1/2 relative h-[35vh] md:h-auto">
           <img
             src={image}
             alt={title}
-            className="w-full h-48 object-cover rounded mb-4"
+            className="w-full h-full object-cover"
           />
-          <h2 className="text-2xl font-bold mb-4">{title}</h2>
-          <p className="text-gray-700 mb-4">{description}</p>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 md:p-6">
+            <h2 className="text-xl md:text-3xl font-bold text-white mb-1">{title}</h2>
+            <p className="text-gray-200 text-sm md:text-lg line-clamp-2">{description}</p>
+          </div>
+        </div>
 
-          {/* Цена */}
-          {pricePerHour && (
-            <div className="text-lg font-semibold text-gray-800 flex items-center justify-center mb-4">
-              <FontAwesomeIcon icon={faCoins} className="text-yellow-500 mr-2" />
-              {pricePerHour}
+        <div className="w-full md:w-1/2 p-3 md:p-6 flex flex-col h-[calc(65vh-2rem)] md:h-auto">
+          <div className="mb-4 md:mb-6">
+            <div className="text-xl md:text-3xl font-bold text-gray-900 mb-4">
+              <span className="text-sm md:text-lg text-gray-600 mr-2">{price.prefix}</span>
+              {price.currency}{price.amount}<span className="text-sm md:text-lg text-gray-600">/hour</span>
             </div>
-          )}
 
-          {/* Особенности */}
-          <ul className="list-none mb-4 text-gray-600">
-            {features.map((feature, index) => (
-              <li key={index} className="flex items-center space-x-2 mb-2">
-                <FontAwesomeIcon
-                  icon={
-                    index === 0
-                      ? faUser
-                      : index === 1
-                      ? faSuitcase
-                      : faCoins
-                  }
-                  className="text-gray-800"
-                />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row items-center bg-gray-50 rounded-xl p-2 md:p-6 md:flex-col md:aspect-square"
+                >
+                  <FontAwesomeIcon
+                    icon={getIcon(feature.icon)}
+                    className="text-gray-700 w-5 h-5 md:w-8 md:h-8 md:mb-3 mr-2 md:mr-0"
+                  />
+                  <span className="text-gray-600 text-xs md:text-base text-center">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Модели машин */}
-          {carModels && carModels.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">Available Models</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {carModels.map((car, index) => (
-                  <div key={index} className="flex flex-col items-center">
-                    <img
-                      src={car.image}
-                      alt={car.name}
-                      className="w-24 h-16 object-cover rounded mb-2"
-                    />
-                    <span className="text-gray-700 text-sm">{car.name}</span>
+          {cars && cars.length > 0 && (
+            <div className="mt-auto">
+              <h3 className="text-base md:text-lg font-semibold text-gray-700 mb-2">Available vehicles</h3>
+              <Slider
+                dots={false}
+                infinite={true}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                autoplay={true}
+                autoplaySpeed={3000}
+                prevArrow={<CustomPrevArrow />}
+                nextArrow={<CustomNextArrow />}
+                className="relative"
+              >
+                {cars.map((car, index) => (
+                  <div key={index} className="outline-none px-1">
+                    <div className="relative aspect-video rounded-lg overflow-hidden">
+                      <img
+                        src={car.image}
+                        alt={car.name}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-2 md:p-4">
+                        <h4 className="text-white text-base md:text-xl font-semibold">{car.name}</h4>
+                      </div>
+                    </div>
                   </div>
                 ))}
-              </div>
+              </Slider>
             </div>
           )}
         </div>
       </div>
     </div>
   );
+};
+
+ServiceClassDetail.propTypes = {
+  serviceClass: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    features: PropTypes.arrayOf(PropTypes.shape({
+      icon: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired
+    })).isRequired,
+    price: PropTypes.shape({
+      amount: PropTypes.string.isRequired,
+      currency: PropTypes.string.isRequired,
+      prefix: PropTypes.string.isRequired
+    }).isRequired,
+    cars: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
+      })
+    ),
+  }),
+  onClose: PropTypes.func.isRequired,
 };
 
 export default ServiceClassDetail;

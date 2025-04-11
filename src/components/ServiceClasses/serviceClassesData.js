@@ -1,64 +1,76 @@
 const serviceClassesData = [
   {
     title: 'Business Class',
-    image: '/images/business-class.jpg',
-    description: 'Comfortable rides for business or leisure.',
+    image: './images/business-class.jpg',
+    description: 'Premium comfort for daily business trips',
     features: [
-      'Seats up to 3 people',
-      'Fits up to 2 bags',
-      'Available in most business districts',
+      { icon: 'user', text: '3 passengers' },
+      { icon: 'suitcase', text: '2 bags' }
     ],
-    pricePerHour: 'from $70/hour',
-    carModels: [
-      { name: 'Mercedes E-Class', image: '/images/mercedes-e-class.jpg' },
-      { name: 'BMW 5 Series', image: '/images/bmw-5-series.jpg' },
-      { name: 'Audi A6', image: '/images/audi-a6.jpg' },
+    price: {
+      amount: '70',
+      currency: '€',
+      prefix: 'from'
+    },
+    cars: [
+      { name: 'Mercedes E-Class', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8' },
+      { name: 'BMW 5 Series', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e' },
+      { name: 'Audi A6', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6' },
     ],
   },
   {
     title: 'First Class',
-    image: '/images/first-class.jpg',
-    description: 'Premium rides for VIP travel.',
+    image: './images/first-class.jpg',
+    description: 'Ultimate luxury experience',
     features: [
-      'Seats up to 3 people',
-      'Fits up to 2 bags',
-      'Available in most business districts',
+      { icon: 'user', text: '3 passengers' },
+      { icon: 'suitcase', text: '2 bags' }
     ],
-    pricePerHour: 'from $80/hour',
-    carModels: [
-      { name: 'Mercedes S-Class', image: '/images/mercedes-s-class.jpg' },
-      { name: 'BMW 7 Series', image: '/images/bmw-7-series.jpg' },
-      { name: 'Audi A8', image: '/images/audi-a8.jpg' },
+    price: {
+      amount: '80',
+      currency: '€',
+      prefix: 'from'
+    },
+    cars: [
+      { name: 'Mercedes S-Class', image: 'https://images.unsplash.com/photo-1626668893632-6f3a4466d22f' },
+      { name: 'BMW 7 Series', image: 'https://images.unsplash.com/photo-1617531653332-bd46c24f2068' },
+      { name: 'Audi A8', image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a' },
     ],
   },
   {
     title: 'Business Van',
-    image: '/images/business-van.jpg',
-    description: 'Perfect for larger parties, lots of luggage, or families.',
+    image: './images/business-van.jpg',
+    description: 'Spacious comfort for groups',
     features: [
-      'Seats up to 5 people',
-      'Fits up to 8 bags',
-      'Ideal for families and groups',
+      { icon: 'users', text: '5 passengers' },
+      { icon: 'suitcase', text: '8 bags' }
     ],
-    pricePerHour: 'from $70/hour',
-    carModels: [
-      { name: 'Mercedes V-Class', image: '/images/mercedes-v-class.jpg' },
-      { name: 'VW Multivan', image: '/images/vw-multivan.jpg' },
+    price: {
+      amount: '70',
+      currency: '€',
+      prefix: 'from'
+    },
+    cars: [
+      { name: 'Mercedes V-Class', image: './images/mercedes-v-class.jpg' },
+      { name: 'VW Multivan', image: 'https://images.unsplash.com/photo-1559416523-140ddc3d238c' },
     ],
   },
   {
-    title: 'Electric Class',
-    image: '/images/electric-class.jpg',
-    description: 'Eco-friendly and comfortable rides for up to 3 people.',
+    title: 'Economy',
+    image: './images/econom.jpg',
+    description: 'Eco-friendly premium rides',
     features: [
-      'Seats up to 3 people',
-      'Fits up to 1 bag',
-      'Available in select business districts',
+      { icon: 'user', text: '3 passengers' },
+      { icon: 'suitcase', text: '1 bag' }
     ],
-    pricePerHour: 'from $60/hour',
-    carModels: [
-      { name: 'Tesla Model S', image: '/images/tesla-model-s.jpg' },
-      { name: 'Audi e-tron', image: '/images/audi-e-tron.jpg' },
+    price: {
+      amount: '60',
+      currency: '€',
+      prefix: 'from'
+    },
+    cars: [
+      { name: 'Tesla Model S', image: './images/tesla.jpg' },
+      { name: 'Audi e-tron', image: './images/audi-a6.jpg' },
     ],
   },
 ];
